@@ -1,0 +1,8 @@
+/chatbot
+|-- /static
+|   |-- chat_widget.css
+|   |-- chat_widget.js
+|   |-- /images
+|       |-- ai_bot_icon.png
+|       |-- logo.png
+|-- index.html (opcional, solo si se necesita para demostración)
