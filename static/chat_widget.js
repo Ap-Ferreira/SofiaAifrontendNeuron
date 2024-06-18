@@ -4,6 +4,12 @@
     var typingIndicatorInterval = null;
     var apiKey = "mi_llave_de_protección"; // Añadir la clave API
 
+    // Añadir meta tag para prevenir el zoom en dispositivos móviles
+    var metaViewport = document.createElement('meta');
+    metaViewport.name = "viewport";
+    metaViewport.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
+    document.head.appendChild(metaViewport);
+
     // Crear burbuja flotante
     var chatBubble = document.createElement('div');
     chatBubble.className = 'chat-bubble';
@@ -21,7 +27,7 @@
       </div>
       <div class="chat-bot-info">
           <img src="static/images/ai-bot-icon.png" alt="Yumbot" class="chat-bot-icon">
-          <span class="chat-bot-title">Canabot  👋</span>
+          <span class="chat-bot-title">   Hola, Canabot👋</span>
           <span class="chat-bot-subtitle">Asistente de IA de Canaco</span>
       </div>
       <div class="chat-messages" id="chatMessages"></div>
@@ -81,6 +87,12 @@
 
     function startConversation() {
         console.log("Iniciando conversación...");
+        startConversationButton.disabled = true; // Deshabilitar el botón
+        startConversationButton.classList.add('button-disabled'); // Añadir clase de deshabilitado
+
+        // Añadir efecto de carga
+        startConversationButton.innerHTML = 'Iniciando...';
+
         fetch(`${backendURL}/start?platform=Web`, {
             method: 'GET',
             headers: {
@@ -97,10 +109,18 @@
                 threadID = data.thread_id;
                 addMessageToChat('Asistente', '¿En qué te puedo servir? 😊');
                 showChatInput();
+                setTimeout(() => {
+                    startConversationButton.disabled = false; // Habilitar el botón después de 3 segundos
+                    startConversationButton.classList.remove('button-disabled'); // Remover clase de deshabilitado
+                    startConversationButton.innerHTML = 'Iniciar conversación'; // Restablecer texto del botón
+                }, 3000);
             })
             .catch(error => {
                 console.error('Error al iniciar la conversación:', error);
                 addMessageToChat('Error', 'No se pudo iniciar la conversación.');
+                startConversationButton.disabled = false; // Habilitar el botón en caso de error
+                startConversationButton.classList.remove('button-disabled'); // Remover clase de deshabilitado
+                startConversationButton.innerHTML = 'Iniciar conversación'; // Restablecer texto del botón
             });
     }
 
@@ -150,17 +170,29 @@
     }
 
     function startTypingIndicator() {
-        var typingIndicator = document.createElement('p');
-        typingIndicator.className = 'typing-indicator';
-        typingIndicator.innerHTML = '<strong>Asistente:</strong> Escribiendo';
+        var typingIndicator = document.createElement('div');
+        typingIndicator.className = 'message-bubble assistant-message typing-indicator';
+
+        // Agregar imagen para el asistente
+        var img = document.createElement('img');
+        img.src = 'static/images/ai-bot-icon.png';
+        img.alt = 'Asistente';
+        img.className = 'assistant-icon';
+        typingIndicator.appendChild(img);
+
+        var typingText = document.createElement('div');
+        typingText.className = 'message-text';
+        typingText.innerHTML = 'Escribiendo...';
+        typingIndicator.appendChild(typingText);
+
         chatMessages.appendChild(typingIndicator);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
         typingIndicatorInterval = setInterval(() => {
-            if (typingIndicator.innerHTML.endsWith('...')) {
-                typingIndicator.innerHTML = '<strong>Asistente:</strong> Escribiendo';
+            if (typingText.innerHTML.endsWith('...')) {
+                typingText.innerHTML = 'Escribiendo';
             } else {
-                typingIndicator.innerHTML += '.';
+                typingText.innerHTML += '.';
             }
         }, 500);
     }
@@ -179,9 +211,28 @@
         var typingIndicator = chatMessages.querySelector('.typing-indicator');
         if (typingIndicator) typingIndicator.remove();
 
-        var messageElement = document.createElement('p');
-        messageElement.innerHTML = `<strong>${sender}:</strong> ${marked.parse(message)}`;
-        chatMessages.appendChild(messageElement);
+        var messageWrapper = document.createElement('div');
+        messageWrapper.className = sender === 'Tú' ? 'message-wrapper user-message' : 'message-wrapper assistant-message';
+
+        var messageElement = document.createElement('div');
+        messageElement.className = 'message-bubble';
+
+        if (sender !== 'Tú') {
+            // Agregar imagen para el asistente
+            var img = document.createElement('img');
+            img.src = 'static/images/ai-bot-icon.png';
+            img.alt = 'Asistente';
+            img.className = 'assistant-icon';
+            messageElement.appendChild(img);
+        }
+
+        var messageText = document.createElement('div');
+        messageText.className = 'message-text';
+        messageText.innerHTML = `${marked.parse(message)}`;
+        messageElement.appendChild(messageText);
+
+        messageWrapper.appendChild(messageElement);
+        chatMessages.appendChild(messageWrapper);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 })();

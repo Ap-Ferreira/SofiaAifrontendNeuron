@@ -12,6 +12,7 @@
 
 #startConversationButton:hover {
   background-color: #5A8BCC;
+
 }
 
 /* Botón de enviar mensaje */
@@ -67,6 +68,12 @@
   z-index: 1000;
   border-radius: 20px;
   font-family: 'Montserrat', sans-serif;
+}
+
+@media (min-width: 769px) {
+    .chat-container {
+        border: 0px solid black; /* Contorno negro más grueso */
+    }
 }
 
 .chat-content-vertical {
@@ -240,4 +247,116 @@
     color: #333;
     background-color: #FFFFFF;
   }
+}
+
+@media (max-width: 768px) {
+  /* Ajustes para el botón de iniciar conversación */
+  #startConversationButton {
+    padding: 10px;
+    border-radius: 20px;
+    width: calc(100% - 20px); /* Asegurarse que el botón no se corte */
+    margin: 10px; /* Añadir márgenes alrededor del botón */
+    box-sizing: border-box; /* Para incluir el padding en el ancho total */
+  }
+
+  /* Ajustes para el botón de enviar mensaje */
+  #sendButton {
+    border-radius: 0 5px 5px 0;
+    margin: 0 10px 10px 0; /* Añadir margen inferior */
+    box-sizing: border-box; /* Para incluir el padding en el ancho total */
+  }
+
+  /* Ajustes para el input de chat */
+  .chat-input-container input {
+    border-radius: 5px 0 0 5px;
+    margin: 0 0 10px 10px; /* Añadir margen inferior */
+    box-sizing: border-box; /* Para incluir el padding en el ancho total */
+  }
+
+  /* Ajustes generales para asegurar el centrado y alineación */
+  .chat-input-container {
+    display: flex;
+    padding: 10px; /* Añadir padding alrededor */
+    box-sizing: border-box; /* Para incluir el padding en el ancho total */
+  }
+}
+
+.user-message {
+  justify-content: flex-end;
+  margin-right: 0;
+  margin-left: auto; /* Asegura que la burbuja del usuario no tenga margen derecho */
+}
+
+.assistant-message {
+  justify-content: flex-start;
+  margin-left: 0;
+  margin-right: auto; /* Asegura que la burbuja del asistente no tenga margen izquierdo */
+}
+
+.message-wrapper {
+  display: flex;
+  margin-bottom: 5px; /* Aumentar el espaciado entre los mensajes */
+  padding: 5px;
+  max-width: 100%; /* Permitir que las burbujas ocupen hasta el ancho completo */
+}
+
+.message-bubble {
+    display: inline-flex;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+    font-size: 14px;
+    word-wrap: break-word;
+    max-width: 80%;
+    align-items: center;
+}
+
+
+.user-message .message-bubble {
+  background-color: #c4d8f8; /* Color similar a WhatsApp para el usuario */
+  color: #000; /* Texto negro */
+  border-top-right-radius: 0;
+  justify-content: flex-end;
+  align-self: flex-end;
+}
+
+.assistant-message .message-bubble {
+  display: flex;
+  align-items: center;
+  background-color: #ececec;
+  color: #000;
+  border-top-left-radius: 0;
+  justify-content: flex-start;
+  align-self: flex-start;
+}
+
+.assistant-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.message-text {
+  display: inline-block;
+  max-width: 100%; /* Ajustar según el tamaño de la imagen */
+}
+
+
+
+/* Estilos para el nombre del remitente */
+.message-bubble strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Estilos para el botón deshabilitado */
+.button-disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Efecto de carga en el botón */
+#startConversationButton.loading {
+  background-color: #5A8BCC;
+  cursor: wait;
 }
